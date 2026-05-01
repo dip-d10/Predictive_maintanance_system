@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: src
+Version: 0.0.1
+Summary: An MLOps project for Predictive Maintanance System
+Author: Sumanta Jyoti
+Author-email: Sumanta Jyoti <sumantajyoti795@gmail.com>
+License-File: LICENSE
+Dynamic: author
+Dynamic: license-file
