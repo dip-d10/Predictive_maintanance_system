@@ -1,13 +1,14 @@
 from dataclasses import dataclass
-from pathlib import Path
+from typing import List
 
 
-@dataclass(frozen=True)
+@dataclass
 class DataIngestionConfig:
-   root_dir: Path #root_dir: 'artifacts/data_ingestion'
-   source_URL: str # MongoDB URL
-   local_data_path: Path # 5 datasets
-   raw_data_path : Path # Merged dataset
+    
+    root_dir: str
+    database_name: str
+    collections: List[str]
+    raw_data_dir: str
    
   
    

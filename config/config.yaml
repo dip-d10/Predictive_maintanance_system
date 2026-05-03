@@ -1,7 +1,14 @@
-artifact_root: artifacts
+artifacts_root: artifacts
 
 data_ingestion:
-  root_dir: artifacts/data_ingestion
-  source_URL: 
-  local_data_path: artifacts/data_ingestion/data.zip
-  raw_data_path : 
+  root_dir: artifacts/data_ingestion 
+  database_name: predictive_maintenance_db
+  collections:
+    - telemetry
+    - errors
+    - failures
+    - machines
+    - maintenance
+  raw_data_dir: artifacts/data_ingestion/raw_data
+
+  

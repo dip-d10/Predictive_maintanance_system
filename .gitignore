@@ -1,1 +1,3 @@
 .predictive_maintanance_venv
+logs
+.env
