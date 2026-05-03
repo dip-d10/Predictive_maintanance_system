@@ -11,7 +11,11 @@ class DataIngestionConfig:
     raw_data_dir: str
    
   
-   
+@dataclass
+class RawDataValidationConfig:
+    root_dir: str
+    raw_data_dir: str
+    schema_file_path: str   
    
        
              

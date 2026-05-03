@@ -1,1 +1,33 @@
-all: good
+  
+telemetry:
+  columns:
+    datetime: object
+    machineID: int64
+    volt: float64
+    rotate: float64
+    pressure: float64
+    vibration: float64
+
+errors:
+  columns:
+    datetime: object
+    machineID: int64
+    errorID: object
+
+failures:
+  columns:
+    datetime: object
+    machineID: int64
+    failure: object
+
+machines:
+  columns:
+    machineID: int64
+    model: object
+    age: int64
+
+maintenance:
+  columns:
+    datetime: object
+    machineID: int64
+    comp: object  
