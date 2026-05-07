@@ -2,3 +2,4 @@
 logs
 .env
 artifacts
+src/research/data/
