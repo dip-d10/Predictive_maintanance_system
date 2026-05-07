@@ -30,10 +30,7 @@ class ConfigurationManager:
         )
         
     def get_data_validation_config(self) -> DataValidationConfig:
-        """
-        Reads the data_validation section from config.yaml and 
-        returns a strictly-typed DataValidationConfig object.
-        """
+        
         config = self.config.data_validation
 
         # Ensure the artifacts/data_validation directory exists before the component runs
@@ -42,7 +39,7 @@ class ConfigurationManager:
         data_validation_config = DataValidationConfig(
             root_dir=Path(config.root_dir),
             raw_data_dir=Path(config.raw_data_dir),
-            schema_file_path=Path(config.schema_file_path),
+            schema_file_path=SCHEMA_FILE_PATH,
             status_file=Path(config.status_file),
             merged_dataset_path=Path(config.merged_dataset_path)
         )

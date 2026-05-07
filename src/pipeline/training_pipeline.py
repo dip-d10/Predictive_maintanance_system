@@ -12,9 +12,11 @@ class TrainingPipeline:
         data_ingestion = DataIngestion(config=data_ingestion_config)
         return data_ingestion.initiate_data_ingestion()
 
+
     def start_data_validation(self):
+        """
+        Build the DataValidation component and run the full validation flow.
+        """
         data_validation_config = self.config_manager.get_data_validation_config()
         data_validation = DataValidation(config=data_validation_config)
         return data_validation.initiate_data_validation()
-        
-    # We will add start_data_transformation() here next!
