@@ -19,3 +19,18 @@ class DataValidationConfig:
     schema_file_path: Path
     status_file: Path
     merged_dataset_path: Path
+    
+    
+@dataclass
+class FeatureEngineeringConfig:
+    root_dir: str
+    master_data_path: str
+    feature_store_path: str
+    final_feature_path: str
+    lag_features: list
+    rolling_windows: list
+    prediction_horizons: list
+    telemetry_columns: list
+    machine_id_column: str
+    datetime_column: str
+    failure_column: str    

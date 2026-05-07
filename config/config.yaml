@@ -18,3 +18,21 @@ data_validation:
   schema_file_path: schema.yaml
   status_file: artifacts/data_validation/status.txt
   merged_dataset_path: artifacts/data_validation/master_dataset.csv
+
+
+feature_engineering:
+  root_dir: artifacts/feature_engineering
+  master_data_path: artifacts/data_validation/master_dataset.csv
+  feature_store_path: artifacts/feature_engineering/feature_store.csv
+  final_feature_path: artifacts/feature_engineering/final_feature_dataset.csv
+  lag_features: [1, 3, 6]
+  rolling_windows: [3, 12, 24]
+  prediction_horizons: [24]
+  telemetry_columns:
+    - volt
+    - rotate
+    - pressure
+    - vibration
+  machine_id_column: machineID
+  datetime_column: datetime
+  failure_column: failure

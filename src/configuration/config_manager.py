@@ -1,6 +1,6 @@
 from src.utils.main_utils import read_yaml, create_directories
 from src.constants import CONFIG_FILE_PATH, SCHEMA_FILE_PATH
-from src.entity.config_entity import DataIngestionConfig, DataValidationConfig
+from src.entity.config_entity import DataIngestionConfig, DataValidationConfig, FeatureEngineeringConfig
 from pathlib import Path
 
 class ConfigurationManager:
@@ -45,3 +45,23 @@ class ConfigurationManager:
         )
 
         return data_validation_config
+
+    def get_feature_engineering_config(self) -> FeatureEngineeringConfig:
+
+        config = self.config.feature_engineering
+
+        create_directories([config.root_dir])
+
+        return FeatureEngineeringConfig(
+            root_dir=config.root_dir,
+            master_data_path=config.master_data_path,
+            feature_store_path=config.feature_store_path,
+            final_feature_path=config.final_feature_path,
+            lag_features=config.lag_features,
+            rolling_windows=config.rolling_windows,
+            prediction_horizons=config.prediction_horizons,
+            telemetry_columns=config.telemetry_columns,
+            machine_id_column=config.machine_id_column,
+            datetime_column=config.datetime_column,
+            failure_column=config.failure_column,
+        )
