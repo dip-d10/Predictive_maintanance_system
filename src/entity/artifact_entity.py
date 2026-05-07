@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from pathlib import Path
 
 @dataclass
 class DataIngestionArtifact:
@@ -7,6 +7,7 @@ class DataIngestionArtifact:
     
     
 @dataclass
-class RawDataValidationArtifact:
+class DataValidationArtifact:
     validation_status: bool
-    validation_report_path: str   
+    validation_report_path: Path
+    merged_data_path: Path

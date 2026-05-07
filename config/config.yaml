@@ -13,4 +13,8 @@ data_ingestion:
 
 
 data_validation:
-  root_dir: artifacts/data_validation    
+  root_dir: artifacts/data_validation
+  raw_data_dir: artifacts/data_ingestion/raw_data
+  schema_file_path: schema.yaml
+  status_file: artifacts/data_validation/status.txt
+  merged_dataset_path: artifacts/data_validation/master_dataset.csv

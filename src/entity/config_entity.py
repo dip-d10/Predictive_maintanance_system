@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from typing import List
+from pathlib import Path
+
 
 
 @dataclass
@@ -10,12 +12,10 @@ class DataIngestionConfig:
     collections: List[str]
     raw_data_dir: str
    
-  
-@dataclass
-class RawDataValidationConfig:
-    root_dir: str
-    raw_data_dir: str
-    schema_file_path: str   
-   
-       
-             
+@dataclass(frozen=True)
+class DataValidationConfig:
+    root_dir: Path
+    raw_data_dir: Path
+    schema_file_path: Path
+    status_file: Path
+    merged_dataset_path: Path

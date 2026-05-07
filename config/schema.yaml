@@ -31,3 +31,29 @@ maintenance:
     datetime: object
     machineID: int64
     comp: object  
+
+Master_Dataset:
+  columns:
+    datetime: datetime64[ns]
+    machineID: int64
+    volt: float64
+    rotate: float64
+    pressure: float64
+    vibration: float64
+    model: object
+    age: int64
+    failure_comp1: float64
+    failure_comp2: float64
+    failure_comp3: float64
+    failure_comp4: float64
+    failure: float64
+    maint_comp1: float64
+    maint_comp2: float64
+    maint_comp3: float64
+    maint_comp4: float64
+    errorID_error1: float64
+    errorID_error2: float64
+    errorID_error3: float64
+    errorID_error4: float64
+    errorID_error5: float64
+  target_column: failure
