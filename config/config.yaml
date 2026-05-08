@@ -36,3 +36,36 @@ feature_engineering:
   machine_id_column: machineID
   datetime_column: datetime
   failure_column: failure
+
+
+
+model_trainer:
+  root_dir: artifacts/model_trainer
+  trained_model_dir: artifacts/model_trainer/models
+  train_data_path: artifacts/model_trainer/train.csv
+  test_data_path: artifacts/model_trainer/test.csv
+  metrics_file_path: artifacts/model_trainer/model_metrics.json
+
+  test_size: 0.2
+  random_state: 42
+  max_training_rows: 50000
+
+  target_column: failure_within_next_24h
+
+  model_params:
+    logistic_regression:
+      C: 1.0
+      solver: liblinear
+      max_iter: 1000
+
+    random_forest:
+      n_estimators: 25
+      max_depth: 10
+      n_jobs: -1
+
+    xgboost:
+      n_estimators: 20
+      max_depth: 6
+      learning_rate: 0.05  
+      n_jobs: -1
+      tree_method: hist

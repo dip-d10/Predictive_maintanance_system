@@ -7,6 +7,7 @@ import sys
 STAGE_NAME_1 = "Data Ingestion Stage"
 STAGE_NAME_2 = "Data Validation and Merging Stage"
 STAGE_NAME_3 = "Feature Engineering Stage"
+STAGE_NAME_4 = "Model Training Stage"
 
 if __name__ == "__main__":
     try:
@@ -39,6 +40,10 @@ if __name__ == "__main__":
             exit(1)
 
         logging.info(f">>>>>> {STAGE_NAME_3} completed successfully <<<<<<\n\nx==========x")
+
+        logging.info(f">>>>>> {STAGE_NAME_4} started <<<<<<")
+        model_trainer_artifact = pipeline.start_model_trainer()
+        logging.info(f">>>>>> {STAGE_NAME_4} completed successfully <<<<<<\n\nx==========x")
 
     except Exception as e:
         raise MyException(e, sys) from e

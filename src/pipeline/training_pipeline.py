@@ -2,7 +2,7 @@ from src.configuration.config_manager import ConfigurationManager
 from src.components.data_ingestion import DataIngestion
 from src.components.data_validation import DataValidation
 from src.components.feature_engineering import FeatureEngineering
-from src.logger import logging
+from src.components.model_trainer import ModelTrainer
 
 class TrainingPipeline:
     def __init__(self):
@@ -29,3 +29,11 @@ class TrainingPipeline:
         feature_engineering_config = self.config_manager.get_feature_engineering_config()
         feature_engineering = FeatureEngineering(config=feature_engineering_config)
         return feature_engineering.initiate_feature_engineering()
+
+    def start_model_trainer(self):
+        """
+        Build the ModelTrainer component and run the model training flow.
+        """
+        model_trainer_config = self.config_manager.get_model_trainer_config()
+        model_trainer = ModelTrainer(config=model_trainer_config)
+        return model_trainer.initiate_model_trainer()

@@ -1,6 +1,6 @@
 from src.utils.main_utils import read_yaml, create_directories
 from src.constants import CONFIG_FILE_PATH, SCHEMA_FILE_PATH
-from src.entity.config_entity import DataIngestionConfig, DataValidationConfig, FeatureEngineeringConfig
+from src.entity.config_entity import DataIngestionConfig, DataValidationConfig, FeatureEngineeringConfig, ModelTrainerConfig
 from pathlib import Path
 
 class ConfigurationManager:
@@ -11,7 +11,9 @@ class ConfigurationManager:
 
         create_directories([
             self.config.artifacts_root,
-            self.config.data_validation.root_dir
+            self.config.data_validation.root_dir,
+            self.config.model_trainer.root_dir,
+            self.config.model_trainer.trained_model_dir,
         ])
 
     def get_data_ingestion_config(self):
@@ -64,4 +66,28 @@ class ConfigurationManager:
             machine_id_column=config.machine_id_column,
             datetime_column=config.datetime_column,
             failure_column=config.failure_column,
+        )
+
+    def get_model_trainer_config(self) -> ModelTrainerConfig:
+
+        config = self.config.model_trainer
+
+        create_directories([
+            config.root_dir,
+            config.trained_model_dir,
+        ])
+
+        return ModelTrainerConfig(
+            root_dir=config.root_dir,
+            training_data_path=self.config.feature_engineering.final_feature_path,
+            trained_model_dir=config.trained_model_dir,
+            train_data_path=config.train_data_path,
+            test_data_path=config.test_data_path,
+            metrics_file_path=config.metrics_file_path,
+            test_size=config.test_size,
+            random_state=config.random_state,
+            max_training_rows=config.max_training_rows,
+            target_column=config.target_column,
+            datetime_column=self.config.feature_engineering.datetime_column,
+            model_params=config.model_params,
         )

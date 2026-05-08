@@ -18,3 +18,11 @@ class FeatureEngineeringArtifact:
     final_feature_path: str
     is_engineering_successful: bool
     message: str    
+
+
+@dataclass
+class ModelTrainerArtifact:
+    trained_model_dir: str
+    train_data_path: str
+    test_data_path: str
+    model_metrics_path: str    

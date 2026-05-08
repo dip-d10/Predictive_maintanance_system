@@ -33,4 +33,21 @@ class FeatureEngineeringConfig:
     telemetry_columns: list
     machine_id_column: str
     datetime_column: str
-    failure_column: str    
+    failure_column: str   
+      
+
+@dataclass
+class ModelTrainerConfig:
+    root_dir: str
+    training_data_path: str
+    trained_model_dir: str
+    train_data_path: str
+    test_data_path: str
+    metrics_file_path: str
+    test_size: float
+    random_state: int
+    max_training_rows: int
+    target_column: str
+    datetime_column: str
+    model_params: dict      
+      
