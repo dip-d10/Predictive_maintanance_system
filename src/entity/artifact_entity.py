@@ -26,3 +26,14 @@ class ModelTrainerArtifact:
     train_data_path: str
     test_data_path: str
     model_metrics_path: str    
+
+
+@dataclass
+class ModelEvaluationArtifact:
+    best_model_path: str
+    threshold_path: str
+    evaluation_report_path: str
+    approved_model: bool
+    best_model_name: str
+    best_threshold: float
+    best_business_cost: float

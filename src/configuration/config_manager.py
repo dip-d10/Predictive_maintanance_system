@@ -1,6 +1,6 @@
 from src.utils.main_utils import read_yaml, create_directories
 from src.constants import CONFIG_FILE_PATH, SCHEMA_FILE_PATH
-from src.entity.config_entity import DataIngestionConfig, DataValidationConfig, FeatureEngineeringConfig, ModelTrainerConfig
+from src.entity.config_entity import DataIngestionConfig, DataValidationConfig, FeatureEngineeringConfig, ModelTrainerConfig, ModelEvaluationConfig
 from pathlib import Path
 
 class ConfigurationManager:
@@ -90,4 +90,25 @@ class ConfigurationManager:
             target_column=config.target_column,
             datetime_column=self.config.feature_engineering.datetime_column,
             model_params=config.model_params,
+        )
+
+    def get_model_evaluation_config(self) -> ModelEvaluationConfig:
+        config = self.config.model_evaluation
+
+        # Ensure evaluation artifact directory exists
+        create_directories([config.root_dir])
+
+        return ModelEvaluationConfig(
+            root_dir=config.root_dir,
+            trained_model_dir=self.config.model_trainer.trained_model_dir,
+            train_data_path=self.config.model_trainer.train_data_path,
+            test_data_path=self.config.model_trainer.test_data_path,
+            evaluation_report_path=config.evaluation_report_path,
+            threshold_report_path=config.threshold_report_path,
+            best_model_path=config.best_model_path,
+            target_column=self.config.model_trainer.target_column,
+            datetime_column=self.config.feature_engineering.datetime_column,
+            downtime_cost=config.downtime_cost,
+            maintenance_cost=config.maintenance_cost,
+            min_pr_auc_threshold=config.min_pr_auc_threshold,
         )

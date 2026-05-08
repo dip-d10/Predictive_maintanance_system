@@ -51,3 +51,18 @@ class ModelTrainerConfig:
     datetime_column: str
     model_params: dict      
       
+
+@dataclass
+class ModelEvaluationConfig:
+    root_dir: str
+    trained_model_dir: str
+    train_data_path: str
+    test_data_path: str
+    evaluation_report_path: str
+    threshold_report_path: str
+    best_model_path: str
+    target_column: str
+    datetime_column: str
+    downtime_cost: int
+    maintenance_cost: int
+    min_pr_auc_threshold: float

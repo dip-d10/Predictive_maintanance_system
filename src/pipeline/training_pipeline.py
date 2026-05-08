@@ -3,6 +3,7 @@ from src.components.data_ingestion import DataIngestion
 from src.components.data_validation import DataValidation
 from src.components.feature_engineering import FeatureEngineering
 from src.components.model_trainer import ModelTrainer
+from src.components.model_evaluation import ModelEvaluation
 
 class TrainingPipeline:
     def __init__(self):
@@ -37,3 +38,11 @@ class TrainingPipeline:
         model_trainer_config = self.config_manager.get_model_trainer_config()
         model_trainer = ModelTrainer(config=model_trainer_config)
         return model_trainer.initiate_model_trainer()
+
+    def start_model_evaluation(self):
+        """
+        Build the ModelEvaluation component and run the evaluation flow.
+        """
+        model_evaluation_config = self.config_manager.get_model_evaluation_config()
+        model_evaluation = ModelEvaluation(config=model_evaluation_config)
+        return model_evaluation.initiate_model_evaluation()

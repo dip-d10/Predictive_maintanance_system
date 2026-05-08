@@ -148,8 +148,7 @@ class ModelTrainer:
 
 			candidate_models = self._build_candidate_models()
 			metrics_report = {}
-			best_model_name = None
-			best_model_score = float("-inf")
+			
 
 			for model_name, model in candidate_models.items():
 				logging.info(f"Training candidate model: {model_name}")
@@ -167,14 +166,10 @@ class ModelTrainer:
 				joblib.dump(model, model_path)
 				metrics_report[model_name]["model_path"] = model_path
 
-				candidate_score = metrics["f1"] if metrics["f1"] is not None else float("-inf")
-				if candidate_score > best_model_score:
-					best_model_score = candidate_score
-					best_model_name = model_name
+				# Trainer no longer chooses a best model. It only trains and saves candidates.
 
 			metrics_payload = {
 				"target_column": target_column,
-				"best_model": best_model_name,
 				"models": metrics_report,
 			}
 

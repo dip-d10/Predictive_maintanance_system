@@ -69,3 +69,17 @@ model_trainer:
       learning_rate: 0.05  
       n_jobs: -1
       tree_method: hist
+
+model_evaluation:
+  root_dir: artifacts/model_evaluation
+
+  evaluation_report_path: artifacts/model_evaluation/evaluation_report.json
+
+  threshold_report_path: artifacts/model_evaluation/threshold_report.json
+
+  best_model_path: artifacts/model_evaluation/best_model.joblib
+
+  downtime_cost: 10000
+  maintenance_cost: 1000
+
+  min_pr_auc_threshold: 0.60
