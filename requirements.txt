@@ -19,5 +19,6 @@ uvicorn
 jinja2
 imblearn
 python-dotenv
+azure-storage-blob
 -e .
 xgboost

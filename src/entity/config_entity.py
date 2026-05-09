@@ -66,3 +66,14 @@ class ModelEvaluationConfig:
     downtime_cost: int
     maintenance_cost: int
     min_pr_auc_threshold: float
+
+
+@dataclass
+class AzureBlobConfig:
+    container_name: str
+
+
+@dataclass
+class ModelPusherConfig:
+    root_dir: str
+    metadata_local_path: str

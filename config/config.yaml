@@ -83,3 +83,10 @@ model_evaluation:
   maintenance_cost: 1000
 
   min_pr_auc_threshold: 0.60
+
+model_pusher:
+  root_dir: artifacts/model_pusher
+  metadata_local_path: artifacts/model_pusher/metadata.json
+
+azure_blob:
+  container_name: ml-models

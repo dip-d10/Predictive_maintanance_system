@@ -9,6 +9,7 @@ STAGE_NAME_2 = "Data Validation and Merging Stage"
 STAGE_NAME_3 = "Feature Engineering Stage"
 STAGE_NAME_4 = "Model Training Stage"
 STAGE_NAME_5 = "Model Evaluation Stage"
+STAGE_NAME_6 = "Model Pusher Stage"
 
 if __name__ == "__main__":
     try:
@@ -54,6 +55,15 @@ if __name__ == "__main__":
             exit(1)
 
         logging.info(f">>>>>> {STAGE_NAME_5} completed successfully <<<<<<\n\nx==========x")
+
+        logging.info(f">>>>>> {STAGE_NAME_6} started <<<<<<")
+        model_pusher_artifact = pipeline.start_model_pusher(model_evaluation_artifact)
+
+        if model_pusher_artifact.deployment_status != "deployed":
+            logging.error("Model pusher rejected deployment. Production model remains unchanged.")
+            exit(1)
+
+        logging.info(f">>>>>> {STAGE_NAME_6} completed successfully <<<<<<\n\nx==========x")
 
     except Exception as e:
         raise MyException(e, sys) from e

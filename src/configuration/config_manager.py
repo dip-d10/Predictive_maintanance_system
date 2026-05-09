@@ -1,6 +1,14 @@
 from src.utils.main_utils import read_yaml, create_directories
 from src.constants import CONFIG_FILE_PATH, SCHEMA_FILE_PATH
-from src.entity.config_entity import DataIngestionConfig, DataValidationConfig, FeatureEngineeringConfig, ModelTrainerConfig, ModelEvaluationConfig
+from src.entity.config_entity import (
+    DataIngestionConfig,
+    DataValidationConfig,
+    FeatureEngineeringConfig,
+    ModelTrainerConfig,
+    ModelEvaluationConfig,
+    AzureBlobConfig,
+    ModelPusherConfig,
+)
 from pathlib import Path
 
 class ConfigurationManager:
@@ -14,6 +22,7 @@ class ConfigurationManager:
             self.config.data_validation.root_dir,
             self.config.model_trainer.root_dir,
             self.config.model_trainer.trained_model_dir,
+            self.config.model_pusher.root_dir,
         ])
 
     def get_data_ingestion_config(self):
@@ -111,4 +120,24 @@ class ConfigurationManager:
             downtime_cost=config.downtime_cost,
             maintenance_cost=config.maintenance_cost,
             min_pr_auc_threshold=config.min_pr_auc_threshold,
+        )
+
+    def get_azure_blob_config(self) -> AzureBlobConfig:
+        config = self.config.azure_blob
+
+        return AzureBlobConfig(
+            container_name=config.container_name,
+        )
+
+    def get_model_pusher_config(self) -> ModelPusherConfig:
+        config = self.config.model_pusher
+
+        create_directories([
+            config.root_dir,
+            str(Path(config.metadata_local_path).parent),
+        ])
+
+        return ModelPusherConfig(
+            root_dir=config.root_dir,
+            metadata_local_path=config.metadata_local_path,
         )

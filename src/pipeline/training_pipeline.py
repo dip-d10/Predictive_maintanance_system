@@ -4,6 +4,8 @@ from src.components.data_validation import DataValidation
 from src.components.feature_engineering import FeatureEngineering
 from src.components.model_trainer import ModelTrainer
 from src.components.model_evaluation import ModelEvaluation
+from src.components.model_pusher import ModelPusher
+from src.cloud_storage.azure_blob import AzureBlobClient
 
 class TrainingPipeline:
     def __init__(self):
@@ -46,3 +48,18 @@ class TrainingPipeline:
         model_evaluation_config = self.config_manager.get_model_evaluation_config()
         model_evaluation = ModelEvaluation(config=model_evaluation_config)
         return model_evaluation.initiate_model_evaluation()
+
+    def start_model_pusher(self, model_evaluation_artifact):
+        """
+        Build the ModelPusher component and run the model deployment flow.
+        """
+        model_pusher_config = self.config_manager.get_model_pusher_config()
+        azure_blob_config = self.config_manager.get_azure_blob_config()
+
+        azure_blob_client = AzureBlobClient(config=azure_blob_config)
+        model_pusher = ModelPusher(
+            config=model_pusher_config,
+            azure_blob_client=azure_blob_client,
+            model_evaluation_artifact=model_evaluation_artifact,
+        )
+        return model_pusher.initiate_model_pusher()

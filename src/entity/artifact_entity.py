@@ -37,3 +37,11 @@ class ModelEvaluationArtifact:
     best_model_name: str
     best_threshold: float
     best_business_cost: float
+
+
+@dataclass
+class ModelPusherArtifact:
+    production_blob_uri: str
+    archived_blob_uri: str
+    deployment_status: str
+    deployed_model_version: str
