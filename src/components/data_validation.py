@@ -140,9 +140,93 @@ class DataValidation:
         logging.info("Master dataset validated successfully.")
         return True
 
+    def calculate_prediction_lookback_window(self) -> int:
+        """
+        Dynamically calculate required lookback window for prediction.
+        
+        Considers:
+        - Maximum lag features
+        - Maximum rolling windows
+        - Error event window
+        - Maintenance window
+        
+        Returns: Required lookback in hours
+        """
+        max_lag = max(self.config.lag_features) if self.config.lag_features else 0
+        max_rolling = max(self.config.rolling_windows) if self.config.rolling_windows else 0
+        
+        # Rolling windows in the config are hourly, so they represent hours directly
+        required_window = max(
+            max_lag,
+            max_rolling,
+            self.config.error_window_hours,
+            self.config.maintenance_window_hours
+        )
+        
+        logging.info(f"Prediction lookback window calculated: {required_window} hours")
+        logging.info(f"  - Max lag features: {max_lag}h")
+        logging.info(f"  - Max rolling windows: {max_rolling}h")
+        logging.info(f"  - Error window: {self.config.error_window_hours}h")
+        logging.info(f"  - Maintenance window: {self.config.maintenance_window_hours}h")
+        
+        return required_window
+
+    def create_prediction_input_dataset(self, master_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Extract latest records for prediction inference.
+        
+        This simulates the latest batch of telemetry data that would be
+        received in production for real-time inference.
+        
+        Steps:
+        1. Calculate required lookback window
+        2. Find latest timestamp in data
+        3. Extract records: latest_timestamp - lookback_window to latest_timestamp
+        4. Save as prediction_input_dataset.csv
+        
+        Returns: Prediction dataset
+        """
+        try:
+            logging.info("Creating prediction input dataset for demo mode...")
+            
+            # Calculate lookback window
+            lookback_hours = self.calculate_prediction_lookback_window()
+            
+            # Find latest timestamp
+            master_df['datetime'] = pd.to_datetime(master_df['datetime'])
+            latest_timestamp = master_df['datetime'].max()
+            lookback_start = latest_timestamp - pd.Timedelta(hours=lookback_hours)
+            
+            logging.info(f"Latest timestamp in dataset: {latest_timestamp}")
+            logging.info(f"Lookback period: {lookback_start} to {latest_timestamp}")
+            
+            # Extract prediction dataset
+            prediction_df = master_df[
+                (master_df['datetime'] >= lookback_start) &
+                (master_df['datetime'] <= latest_timestamp)
+            ].copy()
+            
+            logging.info(f"Extracted {len(prediction_df)} records for prediction")
+            
+            # Save prediction dataset
+            os.makedirs(os.path.dirname(self.config.prediction_input_path), exist_ok=True)
+            prediction_df.to_csv(self.config.prediction_input_path, index=False)
+            logging.info(f"Prediction input dataset saved to: {self.config.prediction_input_path}")
+            
+            # Log sample
+            unique_machines = prediction_df['machineID'].nunique()
+            logging.info(f"Prediction dataset contains {unique_machines} unique machines")
+            
+            return prediction_df
+            
+        except Exception as e:
+            logging.exception(f"Error creating prediction input dataset: {e}")
+            raise e
+
     def initiate_data_validation(self):
         """
         Run the full validation and merge flow.
+        Also creates prediction input dataset for demo mode.
         """
         try:
             self.validate_raw_datasets()
@@ -152,13 +236,17 @@ class DataValidation:
             os.makedirs(os.path.dirname(self.config.merged_dataset_path), exist_ok=True)
             master_df.to_csv(self.config.merged_dataset_path, index=False)
 
+            # Create prediction input dataset for demo mode
+            prediction_df = self.create_prediction_input_dataset(master_df)
+
             with open(self.config.status_file, "w") as f:
                 f.write(f"Validation status: {final_valid}")
 
             return DataValidationArtifact(
                 validation_status=final_valid,
                 validation_report_path=self.config.status_file,
-                merged_data_path=self.config.merged_dataset_path
+                merged_data_path=self.config.merged_dataset_path,
+                prediction_input_path=self.config.prediction_input_path
             )
 
         except Exception as e:

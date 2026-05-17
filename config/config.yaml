@@ -90,3 +90,78 @@ model_pusher:
 
 azure_blob:
   container_name: ml-models
+# ============================================================
+# PREDICTION PIPELINE CONFIGURATIONS
+# ============================================================
+
+prediction_data_ingestion:
+  database_name: predictive_maintenance_db
+  telemetry_collection: telemetry
+  machines_collection: machines
+  errors_collection: errors
+  maintenance_collection: maintenance
+  predictions_collection: predictions
+  prediction_data_dir: artifacts/prediction_data_ingestion
+  lookback_hours: 24
+
+
+prediction_feature_engineering:
+  prediction_features_dir: artifacts/prediction_feature_engineering
+
+
+model_loader:
+  production_model_blob_path: production/model.joblib
+  production_metadata_blob_path: production/metadata.json
+  model_cache_dir: artifacts/model_cache
+  default_threshold: 0.5
+
+
+predictor:
+  predictions_dir: artifacts/predictions
+  high_risk_threshold: 0.7
+  medium_risk_threshold: 0.5
+
+
+prediction_storage:
+  database_name: predictive_maintenance_db
+  predictions_collection: predictions
+  prediction_summary_collection: prediction_summaries
+
+
+alert_manager:
+  alerts_log_dir: artifacts/alerts
+  enable_email: false
+  email_recipients: []
+  enable_slack: false
+  slack_channel: '#maintenance-alerts'
+
+
+# ============================================================
+# SCHEDULER CONFIGURATIONS
+# ============================================================
+
+scheduler:
+  weekly_retraining:
+    enabled: true
+    schedule: '0 2 * * 0'  # Sunday 2 AM UTC
+    max_retries: 3
+    timeout_minutes: 120
+
+  hourly_prediction:
+    enabled: true
+    schedule: '0 * * * *'  # Every hour
+    max_retries: 2
+    timeout_minutes: 30
+  enabled: true
+  schedule: '0 * * * *'  # Every hour
+  max_retries: 2
+  timeout_minutes: 30
+
+# ============================================================
+# DEMO MODE - PREDICTION DATASET CONFIGURATION
+# ============================================================
+
+prediction_data:
+  prediction_input_path: artifacts/prediction/prediction_input_dataset.csv
+  error_window_hours: 24
+  maintenance_window_hours: 168

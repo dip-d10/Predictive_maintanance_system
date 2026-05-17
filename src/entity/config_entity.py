@@ -19,6 +19,11 @@ class DataValidationConfig:
     schema_file_path: Path
     status_file: Path
     merged_dataset_path: Path
+    prediction_input_path: Path
+    lag_features: List
+    rolling_windows: List
+    error_window_hours: int
+    maintenance_window_hours: int
     
     
 @dataclass
@@ -77,3 +82,55 @@ class AzureBlobConfig:
 class ModelPusherConfig:
     root_dir: str
     metadata_local_path: str
+
+
+# ============================================================
+# PREDICTION PIPELINE CONFIGS
+# ============================================================
+
+@dataclass
+class PredictionDataIngestionConfig:
+    prediction_input_path: str
+    prediction_data_dir: str
+
+
+@dataclass
+class PredictionFeatureEngineeringConfig:
+    prediction_features_dir: str
+    telemetry_columns: list
+    lag_features: list
+    rolling_windows: list
+    machine_id_column: str
+    datetime_column: str
+
+
+@dataclass
+class ModelLoaderConfig:
+    container_name: str
+    production_model_blob_path: str
+    production_metadata_blob_path: str
+    model_cache_dir: str
+    default_threshold: float
+
+
+@dataclass
+class PredictorConfig:
+    predictions_dir: str
+    high_risk_threshold: float
+    medium_risk_threshold: float
+
+
+@dataclass
+class PredictionStorageConfig:
+    database_name: str
+    predictions_collection: str
+    prediction_summary_collection: str
+
+
+@dataclass
+class AlertConfig:
+    alerts_log_dir: str
+    enable_email: bool
+    email_recipients: list
+    enable_slack: bool
+    slack_channel: str

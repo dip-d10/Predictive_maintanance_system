@@ -1,4 +1,4 @@
-from src.utils.main_utils import read_yaml, create_directories
+﻿from src.utils.main_utils import read_yaml, create_directories
 from src.constants import CONFIG_FILE_PATH, SCHEMA_FILE_PATH
 from src.entity.config_entity import (
     DataIngestionConfig,
@@ -8,6 +8,12 @@ from src.entity.config_entity import (
     ModelEvaluationConfig,
     AzureBlobConfig,
     ModelPusherConfig,
+    PredictionDataIngestionConfig,
+    PredictionFeatureEngineeringConfig,
+    ModelLoaderConfig,
+    PredictorConfig,
+    PredictionStorageConfig,
+    AlertConfig,
 )
 from pathlib import Path
 
@@ -43,6 +49,7 @@ class ConfigurationManager:
     def get_data_validation_config(self) -> DataValidationConfig:
         
         config = self.config.data_validation
+        prediction_config = self.config.prediction_data
 
         # Ensure the artifacts/data_validation directory exists before the component runs
         create_directories([config.root_dir])
@@ -52,7 +59,12 @@ class ConfigurationManager:
             raw_data_dir=Path(config.raw_data_dir),
             schema_file_path=SCHEMA_FILE_PATH,
             status_file=Path(config.status_file),
-            merged_dataset_path=Path(config.merged_dataset_path)
+            merged_dataset_path=Path(config.merged_dataset_path),
+            prediction_input_path=Path(prediction_config.prediction_input_path),
+            lag_features=self.config.feature_engineering.lag_features,
+            rolling_windows=self.config.feature_engineering.rolling_windows,
+            error_window_hours=prediction_config.error_window_hours,
+            maintenance_window_hours=prediction_config.maintenance_window_hours,
         )
 
         return data_validation_config
@@ -140,4 +152,79 @@ class ConfigurationManager:
         return ModelPusherConfig(
             root_dir=config.root_dir,
             metadata_local_path=config.metadata_local_path,
+        )
+
+    # ============================================================
+    # PREDICTION PIPELINE CONFIG METHODS
+    # ============================================================
+
+    def get_prediction_data_ingestion_config(self) -> PredictionDataIngestionConfig:
+        config = self.config.prediction_data_ingestion
+        prediction_config = self.config.prediction_data
+
+        create_directories([config.prediction_data_dir])
+
+        return PredictionDataIngestionConfig(
+            prediction_input_path=prediction_config.prediction_input_path,
+            prediction_data_dir=config.prediction_data_dir,
+        )
+
+    def get_prediction_feature_engineering_config(self) -> PredictionFeatureEngineeringConfig:
+        config = self.config.prediction_feature_engineering
+
+        create_directories([config.prediction_features_dir])
+
+        return PredictionFeatureEngineeringConfig(
+            prediction_features_dir=config.prediction_features_dir,
+            telemetry_columns=self.config.feature_engineering.telemetry_columns,
+            lag_features=self.config.feature_engineering.lag_features,
+            rolling_windows=self.config.feature_engineering.rolling_windows,
+            machine_id_column=self.config.feature_engineering.machine_id_column,
+            datetime_column=self.config.feature_engineering.datetime_column,
+        )
+
+    def get_model_loader_config(self) -> ModelLoaderConfig:
+        config = self.config.model_loader
+
+        create_directories([config.model_cache_dir])
+
+        return ModelLoaderConfig(
+            container_name=self.config.azure_blob.container_name,
+            production_model_blob_path=config.production_model_blob_path,
+            production_metadata_blob_path=config.production_metadata_blob_path,
+            model_cache_dir=config.model_cache_dir,
+            default_threshold=config.default_threshold,
+        )
+
+    def get_predictor_config(self) -> PredictorConfig:
+        config = self.config.predictor
+
+        create_directories([config.predictions_dir])
+
+        return PredictorConfig(
+            predictions_dir=config.predictions_dir,
+            high_risk_threshold=config.high_risk_threshold,
+            medium_risk_threshold=config.medium_risk_threshold,
+        )
+
+    def get_prediction_storage_config(self) -> PredictionStorageConfig:
+        config = self.config.prediction_storage
+
+        return PredictionStorageConfig(
+            database_name=config.database_name,
+            predictions_collection=config.predictions_collection,
+            prediction_summary_collection=config.prediction_summary_collection,
+        )
+
+    def get_alert_config(self) -> AlertConfig:
+        config = self.config.alert_manager
+
+        create_directories([config.alerts_log_dir])
+
+        return AlertConfig(
+            alerts_log_dir=config.alerts_log_dir,
+            enable_email=config.enable_email,
+            email_recipients=config.email_recipients,
+            enable_slack=config.enable_slack,
+            slack_channel=config.slack_channel,
         )
